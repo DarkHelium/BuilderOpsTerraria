@@ -8,5 +8,15 @@ Configs: {
 			Label: Tiles Per Tick Budget
 			Tooltip: Maximum number of tiles to place per game tick (higher = faster building, but may cause lag)
 		}
+
+		EnableSelectionParticles: {
+			Label: Enable Selection Particles
+			Tooltip: Show visual dust particles around your selection boundaries
+		}
+
+		MaxSelectionSize: {
+			Label: Max Selection Size
+			Tooltip: Maximum number of tiles allowed in a selection (prevents lag from huge selections)
+		}
 	}
 }
