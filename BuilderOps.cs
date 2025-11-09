@@ -28,10 +28,12 @@ namespace BuilderOps
 		/// </summary>
 		public static ModKeybind PlaceTestKey { get; private set; }
 
-		internal enum PacketId : byte
-		{
-			PlaceStoneTest = 1
-		}
+	internal enum PacketId : byte
+	{
+		PlaceStoneTest = 1,
+		EnqueueRect = 2,
+		ClearQueue = 3
+	}
 
 		#region Lifecycle
 
@@ -59,49 +61,107 @@ namespace BuilderOps
 
 		#region Net
 
-		/// <summary>
-		/// Sends a PlaceStoneTest request to the authoritative server.
-		/// </summary>
-		public static void SendPlaceStonePacket(int x, int y)
+	/// <summary>
+	/// Sends a PlaceStoneTest request to the authoritative server.
+	/// </summary>
+	public static void SendPlaceStonePacket(int x, int y)
+	{
+		ModPacket packet = ModContent.GetInstance<BuilderOps>().GetPacket();
+		packet.Write((byte)PacketId.PlaceStoneTest);
+		packet.Write((short)x);
+		packet.Write((short)y);
+		packet.Send();
+	}
+
+	/// <summary>
+	/// Sends an EnqueueRect request to the server to queue a rectangle of tiles.
+	/// </summary>
+	public static void SendEnqueueRectPacket(int x, int y, int width, int height, ushort tileType)
+	{
+		ModPacket packet = ModContent.GetInstance<BuilderOps>().GetPacket();
+		packet.Write((byte)PacketId.EnqueueRect);
+		packet.Write((short)x);
+		packet.Write((short)y);
+		packet.Write((short)width);
+		packet.Write((short)height);
+		packet.Write(tileType);
+		packet.Send();
+	}
+
+	/// <summary>
+	/// Sends a ClearQueue request to the server.
+	/// </summary>
+	public static void SendClearQueuePacket()
+	{
+		ModPacket packet = ModContent.GetInstance<BuilderOps>().GetPacket();
+		packet.Write((byte)PacketId.ClearQueue);
+		packet.Send();
+	}
+
+	/// <summary>
+	/// Handles network packets for BuilderOps functionality.
+	/// </summary>
+	public override void HandlePacket(BinaryReader reader, int whoAmI)
+	{
+		PacketId packetId = (PacketId)reader.ReadByte();
+		switch (packetId)
 		{
-			ModPacket packet = ModContent.GetInstance<BuilderOps>().GetPacket();
-			packet.Write((byte)PacketId.PlaceStoneTest);
-			packet.Write((short)x);
-			packet.Write((short)y);
-			packet.Send();
+			case PacketId.PlaceStoneTest:
+				if (Main.netMode != NetmodeID.Server)
+				{
+					return;
+				}
+
+				int x = reader.ReadInt16();
+				int y = reader.ReadInt16();
+				bool placed = WorldGen.PlaceTile(x, y, TileID.Stone, mute: true, forced: true);
+				if (!placed)
+				{
+					return;
+				}
+
+				NetMessage.SendTileSquare(-1, x, y, 1);
+				ChatHelper.BroadcastChatMessage(NetworkText.FromLiteral($"[BuilderOps] Placed Stone at {x},{y}"), Color.LimeGreen);
+				break;
+
+			case PacketId.EnqueueRect:
+				if (Main.netMode != NetmodeID.Server)
+				{
+					return;
+				}
+
+				int rectX = reader.ReadInt16();
+				int rectY = reader.ReadInt16();
+				int width = reader.ReadInt16();
+				int height = reader.ReadInt16();
+				ushort tileType = reader.ReadUInt16();
+
+				Systems.PlacementQueueSystem.EnqueueRectServer(rectX, rectY, width, height, tileType);
+				ChatHelper.BroadcastChatMessage(
+					NetworkText.FromLiteral($"[BuilderOps] Enqueued {width}x{height} of tile {tileType} at ({rectX},{rectY})"),
+					Color.Orange
+				);
+				break;
+
+			case PacketId.ClearQueue:
+				if (Main.netMode != NetmodeID.Server)
+				{
+					return;
+				}
+
+				int count = Systems.PlacementQueueSystem.Count;
+				Systems.PlacementQueueSystem.ClearQueueServer();
+				ChatHelper.BroadcastChatMessage(
+					NetworkText.FromLiteral($"[BuilderOps] Queue cleared ({count} operations removed)."),
+					Color.Yellow
+				);
+				break;
+
+			default:
+				Logger.Warn($"BuilderOps received unknown packet id: {(byte)packetId}");
+				break;
 		}
-
-		/// <summary>
-		/// Handles network packets for BuilderOps functionality.
-		/// </summary>
-		public override void HandlePacket(BinaryReader reader, int whoAmI)
-		{
-			PacketId packetId = (PacketId)reader.ReadByte();
-			switch (packetId)
-			{
-				case PacketId.PlaceStoneTest:
-					if (Main.netMode != NetmodeID.Server)
-					{
-						return;
-					}
-
-					int x = reader.ReadInt16();
-					int y = reader.ReadInt16();
-					bool placed = WorldGen.PlaceTile(x, y, TileID.Stone, mute: true, forced: true);
-					if (!placed)
-					{
-						return;
-					}
-
-					NetMessage.SendTileSquare(-1, x, y, 1);
-					ChatHelper.BroadcastChatMessage(NetworkText.FromLiteral($"[BuilderOps] Placed Stone at {x},{y}"), Color.LimeGreen);
-					break;
-
-				default:
-					Logger.Warn($"BuilderOps received unknown packet id: {(byte)packetId}");
-					break;
-			}
-		}
+	}
 
 		#endregion
 	}

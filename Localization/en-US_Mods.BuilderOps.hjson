@@ -1,1 +1,12 @@
 "Keybinds.Place Test Tile.DisplayName": Place Test Tile
+
+Configs: {
+	BuilderOpsConfig: {
+		DisplayName: Builder Ops Config
+
+		TilesPerTick: {
+			Label: Tiles Per Tick Budget
+			Tooltip: Maximum number of tiles to place per game tick (higher = faster building, but may cause lag)
+		}
+	}
+}
