@@ -1,0 +1,36 @@
+{
+  "version": 2,
+  "dgSpecHash": "/uB0LT1QMfc=",
+  "success": false,
+  "projectFilePath": "/Users/anavmadan/Library/Application Support/Terraria/tModLoader/ModSources/BuilderOps/BuilderOps.csproj",
+  "expectedPackageFiles": [],
+  "logs": [
+    {
+      "code": "NU1301",
+      "level": "Error",
+      "message": "Unable to load the service index for source https://api.nuget.org/v3/index.json.\n  The type initializer for 'System.Net.CookieContainer' threw an exception.\n  GetDomainName: -1",
+      "projectPath": "/Users/anavmadan/Library/Application Support/Terraria/tModLoader/ModSources/BuilderOps/BuilderOps.csproj",
+      "filePath": "/Users/anavmadan/Library/Application Support/Terraria/tModLoader/ModSources/BuilderOps/BuilderOps.csproj",
+      "libraryId": "Microsoft.NETCore.App.Ref",
+      "targetGraphs": []
+    },
+    {
+      "code": "NU1301",
+      "level": "Error",
+      "message": "Unable to load the service index for source https://api.nuget.org/v3/index.json.\n  The type initializer for 'System.Net.CookieContainer' threw an exception.\n  GetDomainName: -1",
+      "projectPath": "/Users/anavmadan/Library/Application Support/Terraria/tModLoader/ModSources/BuilderOps/BuilderOps.csproj",
+      "filePath": "/Users/anavmadan/Library/Application Support/Terraria/tModLoader/ModSources/BuilderOps/BuilderOps.csproj",
+      "libraryId": "Microsoft.AspNetCore.App.Ref",
+      "targetGraphs": []
+    },
+    {
+      "code": "NU1900",
+      "level": "Warning",
+      "message": "Error occurred while getting package vulnerability data: Unable to load the service index for source https://api.nuget.org/v3/index.json.",
+      "projectPath": "/Users/anavmadan/Library/Application Support/Terraria/tModLoader/ModSources/BuilderOps/BuilderOps.csproj",
+      "warningLevel": 1,
+      "filePath": "/Users/anavmadan/Library/Application Support/Terraria/tModLoader/ModSources/BuilderOps/BuilderOps.csproj",
+      "targetGraphs": []
+    }
+  ]
+}

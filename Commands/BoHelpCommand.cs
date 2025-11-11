@@ -42,12 +42,13 @@ namespace BuilderOps.Commands
 				("bo_removewall", "Remove all walls in selection"),
 				("bo_setboth <tile> <wall>", "Set both tile and wall"),
 				
-				// Utility
-				("bo_place [w] [h] [tile]", "Place rectangle of tiles"),
-				("bo_stop", "Clear placement queue"),
-				("bo_status", "Show queue status"),
-				("bo_time [day|night|noon|midnight]", "Set time of day"),
-				("bo_help", "Show this help message")
+			// Utility
+			("bo_place [w] [h] [tile]", "Place rectangle of tiles"),
+			("bo_stop", "Clear placement queue"),
+			("bo_status", "Show queue status"),
+			("bo_time [day|night|noon|midnight]", "Set time of day"),
+			("bo_god", "Toggle god mode (invincibility, flight, instant mining)"),
+			("bo_help", "Show this help message")
 			};
 
 			caller.Reply("=== BuilderOps Commands ===", Color.Cyan);
