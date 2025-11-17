@@ -35,7 +35,7 @@ namespace BuilderOps.Commands
 			{
 				caller.Reply("[BuilderOps] God mode ENABLED", Color.Gold);
 				caller.Reply("  ✓ Invincibility", Color.LightGreen);
-				caller.Reply("  ✓ Creative flight", Color.LightGreen);
+				caller.Reply("  ✓ Creative flight (double-tap jump to toggle hover)", Color.LightGreen);
 				caller.Reply("  ✓ Instant mining", Color.LightGreen);
 			}
 			else
